@@ -1,0 +1,22 @@
+# Runtime secrets and state
+.env
+.env.*
+!.env.example
+browser_profile/
+data/
+logs/*
+!logs/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Tooling
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/

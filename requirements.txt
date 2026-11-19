@@ -1,0 +1,5 @@
+playwright>=1.45,<2
+rich>=13.7,<16
+pydantic>=2.6,<3
+pytest>=8.0,<10
+pytest-asyncio>=0.23,<2

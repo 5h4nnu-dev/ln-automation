@@ -1,0 +1,5 @@
+# One course URL per line. Blank lines and # comments are ignored.
+https://www.linkedin.com/learning/python-essential-training
+https://www.linkedin.com/learning/learning-sql
+# Optional trailing notes are allowed:
+https://www.linkedin.com/learning/git-github  # finish this week
