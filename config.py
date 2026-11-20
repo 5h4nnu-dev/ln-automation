@@ -82,8 +82,8 @@ class Settings(BaseModel):
     viewport_height: int = Field(default=900, ge=480)
 
     # --- Playback ---------------------------------------------------------
-    playback_speed: float = Field(default=2.0, ge=0.25, le=4.0)
-    max_playback_speed: float = Field(default=2.0, ge=0.25, le=4.0)
+    playback_speed: float = Field(default=2.0, ge=0.25, le=16.0)
+    max_playback_speed: float = Field(default=2.0, ge=0.25, le=16.0)
     poll_interval: float = Field(default=1.0, ge=0.1, le=30.0)
     stall_timeout: float = Field(default=25.0, ge=5.0)
     playback_timeout: float = Field(default=4 * 60 * 60, ge=60.0)
@@ -155,8 +155,8 @@ class Settings(BaseModel):
     @field_validator("playback_speed")
     @classmethod
     def _validate_speed(cls, value: float) -> float:
-        if not 0.25 <= float(value) <= 4.0:
-            raise ValueError("PLAYBACK_SPEED must be between 0.25 and 4.0")
+        if not 0.25 <= float(value) <= 16.0:
+            raise ValueError("PLAYBACK_SPEED must be between 0.25 and 16.0")
         return float(value)
 
     @model_validator(mode="after")

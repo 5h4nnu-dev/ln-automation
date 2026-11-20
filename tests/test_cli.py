@@ -63,7 +63,13 @@ async def test_runner_command_handlers(tmp_path: Path) -> None:
 
         assert "Usage" in await runner._cmd_speed(None)
         assert "not a number" in await runner._cmd_speed("fast")
-        assert "between" in await runner._cmd_speed("9")
+        assert "between" in await runner._cmd_speed("17")
+        message = await runner._cmd_speed("16")
+        assert "16.00x" in message
+        assert settings.playback_speed == 16.0
+        assert settings.max_playback_speed == 16.0
+        assert runner.state.playback_speed == 16.0
+
         message = await runner._cmd_speed("2.75")
         assert "2.75x" in message
         assert settings.playback_speed == 2.75

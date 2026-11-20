@@ -75,6 +75,8 @@ def test_compute_progress_is_clamped() -> None:
         (1.5, 2.0, 1.5),
         (3.0, 2.0, 2.0),
         (5.0, 4.0, 4.0),
+        (16.0, 16.0, 16.0),
+        (20.0, 16.0, 16.0),
         (0.1, 2.0, 0.25),
         (0.0, 2.0, 1.0),
         (-1.0, 2.0, 1.0),
@@ -131,6 +133,21 @@ async def test_play_pause_and_speed(page, site, video_file: Path, tmp_path: Path
     await asyncio.sleep(0.4)
     state = await controller.find_state()
     assert state.current_time == pytest.approx(frozen_at, abs=0.2)
+
+
+async def test_sixteen_x_rate_is_supported_by_chromium(
+    page, site, video_file: Path, tmp_path: Path
+) -> None:
+    await _open_player(page, site, video_file)
+    controller = _controller(
+        page,
+        _settings(tmp_path, playback_speed=16.0, max_playback_speed=16.0),
+    )
+
+    rate = await controller.set_playback_rate()
+    assert rate == pytest.approx(16.0, abs=0.1)
+    state = await controller.find_state()
+    assert state.playback_rate == pytest.approx(16.0, abs=0.1)
 
 
 async def test_wait_for_completion_with_real_media(page, site, video_file: Path, tmp_path: Path) -> None:

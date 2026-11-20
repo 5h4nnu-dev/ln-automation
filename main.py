@@ -814,13 +814,13 @@ class CourseRunner:
 
     async def _cmd_speed(self, argument: str | None = None) -> str:
         if argument is None:
-            return "Usage: speed <0.25-4.0>   (for example: speed 2.5)"
+            return "Usage: speed <0.25-16.0>   (for example: speed 16)"
         try:
             value = float(argument)
         except (TypeError, ValueError):
-            return f"'{argument}' is not a number. Usage: speed <0.25-4.0>"
-        if not 0.25 <= value <= 4.0:
-            return "Playback speed must be between 0.25x and 4.0x."
+            return f"'{argument}' is not a number. Usage: speed <0.25-16.0>"
+        if not 0.25 <= value <= 16.0:
+            return "Playback speed must be between 0.25x and 16.0x."
 
         if value > self.settings.max_playback_speed:
             self.settings.max_playback_speed = value
@@ -1104,7 +1104,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--speed",
         type=float,
-        help="Playback speed for new playback (0.25-4.0); can be changed with the speed command.",
+        help="Playback speed for new playback (0.25-16.0); can be changed with the speed command.",
     )
     parser.add_argument(
         "--headless",

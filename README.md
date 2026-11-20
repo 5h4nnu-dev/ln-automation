@@ -98,8 +98,8 @@ must use the upper-case names.
 | `COURSES_FILE` | *(none)* | CSV/text file of course URLs; overrides `COURSE_URL` for the run |
 | `BROWSER_PROFILE` | `./browser_profile` | Persistent Chromium profile (contains cookies; keep private) |
 | `HEADLESS` | `false` | Keep `false` so you can log in manually |
-| `PLAYBACK_SPEED` | `2.0` | Requested playback speed; validated between 0.25 and 4.0 |
-| `MAX_PLAYBACK_SPEED` | `2.0` | Ceiling applied by the video controller |
+| `PLAYBACK_SPEED` | `2.0` | Requested playback speed; validated between 0.25 and 16.0 |
+| `MAX_PLAYBACK_SPEED` | `2.0` | Ceiling applied by the video controller (max 16.0) |
 | `AUTO_START` | `true` | When false, wait for the `start` command before playing |
 | `AUTO_NAVIGATE` | `true` | When false, pause after each lesson until you type `resume` |
 | `AUTO_RESUME` | `true` | Resume from the last lesson recorded in SQLite |
@@ -120,9 +120,12 @@ Playback-related settings such as `POLL_INTERVAL`, `STALL_TIMEOUT`,
 `VIEWPORT_HEIGHT` are also available; see `config.py` for defaults and
 validation.
 
-The player may report a lower `playbackRate` than requested. The controller
-clamps to the configured ceiling and Chromium's HTML5 range (up to 4x) and logs
-the actual rate.
+Chromium's HTML5 media element accepts rates up to **16x**; 32x raises
+`NotSupportedError`. The controller clamps to the configured ceiling and that
+16x hard limit, then logs the **actual** `playbackRate` the player accepts.
+LinkedIn may reset or ignore a high rate; when it does, the tool continues at
+the accepted rate and still requires the platform's own completion marker.
+The shipped `.env.example` opts into 16x; the built-in default remains 2x.
 
 ### Selector overrides
 
@@ -213,7 +216,7 @@ CLI overrides:
 --config PATH          JSON config file
 --course-url URL       Course URL (ignored when --courses-file is set)
 --courses-file PATH    CSV/text list of course URLs (batch mode)
---speed FLOAT          Playback speed (0.25-4.0)
+--speed FLOAT          Playback speed (0.25-16.0; Chromium HTML5 max)
 --headless / --no-headless
 --profile PATH         Chromium profile directory
 --database PATH        SQLite database path

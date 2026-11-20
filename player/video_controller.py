@@ -30,7 +30,9 @@ from utils.selectors import Selectors
 
 logger = get_logger(__name__)
 
-HARD_MAX_RATE = 4.0
+# Chromium's HTMLMediaElement accepts 0.0625x-16x. 16x is the hard ceiling;
+# 32x raises NotSupportedError. The player may still clamp/reset the value.
+HARD_MAX_RATE = 16.0
 
 # Shared JS helper: choose the most relevant video element on the page.
 _PICK_VIDEO = """
@@ -205,7 +207,7 @@ def compute_progress(current_time: float, duration: float) -> float:
 
 def clamp_rate(
     requested: float,
-    max_rate: float = 2.0,
+    max_rate: float = HARD_MAX_RATE,
     *,
     hard_max: float = HARD_MAX_RATE,
 ) -> float:

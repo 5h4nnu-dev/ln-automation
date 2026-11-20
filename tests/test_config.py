@@ -61,10 +61,19 @@ def test_json_config_file(tmp_path: Path) -> None:
     assert settings.auto_resume is False
 
 
-@pytest.mark.parametrize("speed", ["0.1", "5", "-2"])
+@pytest.mark.parametrize("speed", ["0.1", "20", "-2"])
 def test_invalid_playback_speed_rejected(tmp_path: Path, speed: str) -> None:
     with pytest.raises(ValidationError):
         Settings.load(env={"PLAYBACK_SPEED": speed}, dotenv_path=tmp_path / "missing")
+
+
+def test_sixteen_x_playback_speed_accepted(tmp_path: Path) -> None:
+    settings = Settings.load(
+        env={"PLAYBACK_SPEED": "16", "MAX_PLAYBACK_SPEED": "16"},
+        dotenv_path=tmp_path / "missing",
+    )
+    assert settings.playback_speed == 16.0
+    assert settings.max_playback_speed == 16.0
 
 
 def test_invalid_course_url_scheme_rejected(tmp_path: Path) -> None:
